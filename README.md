@@ -28,9 +28,9 @@ If `PrimaryOutputName` is empty, the script uses KWin's first screen as primary.
 ### Example config
 
 ```bash
-kwriteconfig6 --file kwinrc --group Script-my-kwin-script --key ForceUnmaximizeOnOpen true
-kwriteconfig6 --file kwinrc --group Script-my-kwin-script --key PrimaryOutputName "DP-1"
-kwriteconfig6 --file kwinrc --group Script-my-kwin-script --key IgnoredApps "org.kde.dolphin,firefox,Alacritty"
+kwriteconfig6 --file kwinrc --group Script-workspace-screen-filler --key ForceUnmaximizeOnOpen true
+kwriteconfig6 --file kwinrc --group Script-workspace-screen-filler --key PrimaryOutputName "DP-1"
+kwriteconfig6 --file kwinrc --group Script-workspace-screen-filler --key IgnoredApps "org.kde.dolphin,firefox,Alacritty"
 ```
 
 `IgnoredApps` entries are matched against:
@@ -47,7 +47,7 @@ From this project directory:
 
 ```bash
 kpackagetool6 --type KWin/Script -i .
-kwriteconfig6 --file kwinrc --group Plugins --key my-kwin-scriptEnabled true
+kwriteconfig6 --file kwinrc --group Plugins --key workspace-screen-fillerEnabled true
 qdbus org.kde.KWin /KWin reconfigure
 ```
 

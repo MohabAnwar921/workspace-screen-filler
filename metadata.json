@@ -5,10 +5,10 @@
 		"Icon": "preferences-system-windows",
 		"Authors": [
 			{
-				"Name": "Mohab"
+				"Name": "Mohab Yakout"
 			}
 		],
-		"Id": "my-kwin-script",
+		"Id": "workspace-screen-filler",
 		"Version": "1.0.0",
 		"License": "GPLv3"
 	},
