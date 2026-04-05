@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+													http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+	<kcfgfile name=""/>
+
+	<group name="Script-my-kwin-script">
+		<entry name="ForceUnmaximizeOnOpen" type="Bool">
+			<default>true</default>
+			<label>Force new windows to open unmaximized</label>
+		</entry>
+
+		<entry name="PrimaryOutputName" type="String">
+			<default></default>
+			<label>Primary output name</label>
+			<whatsthis>Name of the monitor to treat as primary (for example DP-1).</whatsthis>
+		</entry>
+
+		<entry name="IgnoredApps" type="String">
+			<default></default>
+			<label>Ignored apps</label>
+			<whatsthis>Comma-separated app identifiers to ignore (desktopFileName, resourceClass, resourceName).</whatsthis>
+		</entry>
+	</group>
+</kcfg>
