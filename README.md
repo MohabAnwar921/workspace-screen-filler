@@ -48,7 +48,7 @@ From this project directory:
 ```bash
 kpackagetool6 --type KWin/Script -i .
 kwriteconfig6 --file kwinrc --group Plugins --key workspace-screen-fillerEnabled true
-qdbus org.kde.KWin /KWin reconfigure
+qdbus org.kde.KWin /KWin reconfigure #Or skip this line and enable it from System settings > KWin scripts
 ```
 
 To update after editing:
