@@ -111,33 +111,33 @@ function currentOrFirstDesktop(window) {
 }
 
 function choosePrimaryAndSecondaryOutputs() {
-	const outputs = workspace.screens || [];
-	if (outputs.length < 2) {
-		return { primary: null, secondary: null };
-	}
+    const outputs = workspace.screens || [];
+    if (outputs.length === 0) {
+        return { primary: null, secondary: null };
+    }
 
-	let primary = null;
-	if (PRIMARY_OUTPUT_NAME) {
-		for (let i = 0; i < outputs.length; i++) {
-			if (outputs[i].name === PRIMARY_OUTPUT_NAME) {
-				primary = outputs[i];
-				break;
-			}
-		}
-	}
-	if (!primary) {
-		primary = outputs[0];
-	}
+    let primary = null;
+    if (PRIMARY_OUTPUT_NAME) {
+        for (let i = 0; i < outputs.length; i++) {
+            if (outputs[i].name === PRIMARY_OUTPUT_NAME) {
+                primary = outputs[i];
+                break;
+            }
+        }
+    }
+    if (!primary) {
+        primary = outputs[0];
+    }
 
-	let secondary = null;
-	for (let i = 0; i < outputs.length; i++) {
-		if (outputs[i] !== primary) {
-			secondary = outputs[i];
-			break;
-		}
-	}
+    let secondary = null;
+    for (let i = 0; i < outputs.length; i++) {
+        if (outputs[i] !== primary) {
+            secondary = outputs[i];
+            break;
+        }
+    }
 
-	return { primary: primary, secondary: secondary };
+    return { primary: primary, secondary: secondary };
 }
 
 function approxEqual(a, b) {
@@ -194,56 +194,60 @@ function desktopIndex(desktop) {
 }
 
 function findPlacement(exceptWindow, primary, secondary) {
-	const desktops = workspace.desktops || [];
-	if (desktops.length === 0) {
-		return null;
-	}
+    const desktops = workspace.desktops || [];
+    if (desktops.length === 0 || !primary) {
+        return null;
+    }
 
-	const current = workspace.currentDesktop;
-	let start = desktopIndex(current);
-	if (start < 0) {
-		start = 0;
-	}
+    const current = workspace.currentDesktop;
+    let start = desktopIndex(current);
+    if (start < 0) {
+        start = 0;
+    }
 
-	for (let i = start; i < desktops.length; i++) {
-		const d = desktops[i];
-		if (!isScreenOccupied(d, primary, exceptWindow)) {
-			return { desktop: d, output: primary };
-		}
-		if (!isScreenOccupied(d, secondary, exceptWindow)) {
-			return { desktop: d, output: secondary };
-		}
-	}
+    for (let i = start; i < desktops.length; i++) {
+        const d = desktops[i];
 
-	const oldCount = desktops.length;
-	workspace.createDesktop(oldCount, "Auto " + (oldCount + 1));
-	const updated = workspace.desktops || [];
-	if (updated.length > oldCount) {
-		return { desktop: updated[updated.length - 1], output: primary };
-	}
+        // Single-screen mode: only primary matters.
+        if (!isScreenOccupied(d, primary, exceptWindow)) {
+            return { desktop: d, output: primary };
+        }
 
-	return { desktop: workspace.currentDesktop, output: primary };
+        // Two-screen mode: try secondary in same desktop.
+        if (secondary && !isScreenOccupied(d, secondary, exceptWindow)) {
+            return { desktop: d, output: secondary };
+        }
+    }
+
+    const oldCount = desktops.length;
+    workspace.createDesktop(oldCount, "Desktop" + (oldCount + 1));
+    const updated = workspace.desktops || [];
+    if (updated.length > oldCount) {
+        return { desktop: updated[updated.length - 1], output: primary };
+    }
+
+    return { desktop: workspace.currentDesktop, output: primary };
 }
 
 function placeMaximizedWindow(window) {
-	if (!isManagedNormalWindow(window) || isIgnoredWindow(window)) {
-		return;
-	}
+    if (!isManagedNormalWindow(window) || isIgnoredWindow(window)) {
+        return;
+    }
 
-	const outputs = choosePrimaryAndSecondaryOutputs();
-	if (!outputs.primary || !outputs.secondary) {
-		return;
-	}
+    const outputs = choosePrimaryAndSecondaryOutputs();
+    if (!outputs.primary) {
+        return;
+    }
 
-	const target = findPlacement(window, outputs.primary, outputs.secondary);
-	if (!target) {
-		return;
-	}
+    const target = findPlacement(window, outputs.primary, outputs.secondary);
+    if (!target) {
+        return;
+    }
 
-	window.desktops = [target.desktop];
-	workspace.currentDesktop = target.desktop;
-	workspace.sendClientToScreen(window, target.output);
-	window.setMaximize(true, true);
+    window.desktops = [target.desktop];
+    workspace.currentDesktop = target.desktop;
+    workspace.sendClientToScreen(window, target.output);
+    window.setMaximize(true, true);
 }
 
 function windowKey(window) {
